@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: case-kpis-api-dev
+    env_file:
+      - .env
+    ports: 
+      - '3001:3001'
+    volumes:
+      - ./:/usr/src/app
+    networks: 
+      - database
+
+  pg-admin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "marcus_fonseca@ymail.com"
+      PGADMIN_DEFAULT_PASSWORD: "PgAdmin2020!@#"
+    ports:
+      - "16543:80"
+    networks:
+      - database
+
+networks: 
+  database:
+    driver: bridge
+
+
+  
