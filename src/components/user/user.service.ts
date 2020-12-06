@@ -21,3 +21,24 @@ export const create = async (name: string, email: string, passwordHash: string) 
   }
 
 }
+
+export const getInfos = async (userId: string) => {
+  const client = await getClient();
+  try {
+    
+    const text = 'SELECT answered FROM users WHERE id = $1';
+    const values = [userId];
+    const response = await client.query(text, values);
+    
+    return response.rows[0];
+
+  } catch (error) {
+
+    throw error
+    
+  } finally {
+    client.release();
+  }
+
+}
+

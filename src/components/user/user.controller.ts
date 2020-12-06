@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import { CreateSchema } from './user.schema'
+import { CreateSchema } from './user.schema';
 import * as UserService from './user.service';
 
 const saltRounds = 10;
@@ -20,6 +20,23 @@ export const create = async (req: Request, res: Response) => {
 
   } catch (error) {
     res.status(400).json({ error });
+  }
+
+}
+
+export const getInfos = async(req: Request, res: Response) => {
+
+  try {
+
+    const { tokenPayload: { id: userId } } = res.locals;
+
+
+    const infos = await UserService.getInfos(userId);
+
+    res.status(200).json(infos);
+    
+  } catch (error) {
+    
   }
 
 }
