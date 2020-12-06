@@ -3,7 +3,7 @@ import { query } from '../../db';
 export const login = async (email: string) => {
 
   try {
-    const text = 'SELECT id, name, password FROM users WHERE email = $1';
+    const text = 'SELECT id, name, password, answered FROM users WHERE email = $1';
     const values = [email];
     const response = await query(text, values) as any;
 

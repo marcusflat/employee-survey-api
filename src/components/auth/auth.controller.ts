@@ -17,14 +17,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     await LoginSchema.validateAsync(req.body, { abortEarly: false });
 
-    const { id, name, password: dbPassword } = await AuthService.login(email);
+    const { id, name, password: dbPassword, answered } = await AuthService.login(email);
     const match = await bcrypt.compare(password, dbPassword);
 
     if(!match) throw Error('User and/or password is not correct');
 
-    
     const secret: string = process.env.JWT_SECRET as string;
-    const token = await jwt.sign({ id, name, email }, secret, { expiresIn: '7d' });
+    const token = await jwt.sign({ id, name, email, answered }, secret, { expiresIn: '7d' });
     res.status(200).json({ token });
 
   } catch (error) {
