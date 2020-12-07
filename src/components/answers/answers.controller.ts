@@ -22,3 +22,38 @@ export const create = async (req: Request, res: Response) => {
 
 }
 
+export const getAll = async (req: Request, res: Response) => {
+
+
+  try {
+    
+    const queryResult = await AnswersService.getAll();
+    const groupedByQuestion = queryResult.reduce((acc, curr) => {
+      const { questionId, question, option, quantidade, chartProps } = curr;
+      acc[questionId] = acc[questionId] 
+      ? { 
+        ...acc[questionId], 
+        data: [
+          ...acc[questionId].data, 
+          { answer: option, quantidade } 
+        ] 
+      } 
+      : { 
+        title: question,
+        chartProps,
+        data: [
+          { answer: option, quantidade }
+        ] 
+      }
+      return acc;
+    }, {});
+
+    res.status(200).json({...groupedByQuestion});
+
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({ error });
+  }
+
+}
+

@@ -6,18 +6,12 @@ export const getAll = async () => {
   try {
     
     const text = `
-    SELECT q.id, q.question, q.type, q.props as "childProps", 
+    SELECT q.id, q.question, q.type, q.input_props as "childProps", 
     array_agg(array[qo.id::text, qo.option::text]) as options
     FROM questions q
     JOIN questions_options qo ON q.id = qo.question_id
-    GROUP BY q.id, q.question, q.type, q.props
+    GROUP BY q.id, q.question, q.type, q.input_props
     `;
-    // const text = `
-    //   SELECT q.id, q.question, q.type, q.props as "childProps", array_agg(qo.option, qo.id) as options
-    //   FROM questions q
-    //   JOIN questions_options qo ON q.id = qo.question_id
-    //   GROUP BY q.id, q.question, q.type, q.props
-    // `;
     const response = await client.query(text);
 
     return response.rows
