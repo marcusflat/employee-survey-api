@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import * as AnswersService from './answers.service';
+import * as UserService from "../user/user.service";
 
 
 export const create = async (req: Request, res: Response) => {
@@ -11,8 +12,12 @@ export const create = async (req: Request, res: Response) => {
    
     const { tokenPayload: { id: userId } } = res.locals;
     
-    const queryResult = await AnswersService.create(userId, answersIds);
+    const userInfos = await UserService.getInfos(userId);
+    const userHasAnswered = userInfos.answered;
     
+    if(userHasAnswered) throw 'Usuário já preencheu a pesquisa.'
+
+    const queryResult = await AnswersService.create(userId, answersIds);
     
     res.status(200).json({ questions: queryResult });
 
